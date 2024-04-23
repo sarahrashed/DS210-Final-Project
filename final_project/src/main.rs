@@ -1,5 +1,6 @@
 use urlencoding::decode;
 mod reading; 
+mod graph_structure;
 
 fn main() {
     // let encoded = "%C3%81ed%C3%A1n_mac_Gabr%C3%A1in";
@@ -22,5 +23,8 @@ fn main() {
     for i in 0..3 {
         println!("{:?}", read_in_game[i]);
     }
+
+    let f = graph_structure::reverse_edges(&vec![("a","b"),("c","c"),("f","z"),("z","f")]);
+    println!("{:?}",f);
 
 }
