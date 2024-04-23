@@ -1,56 +1,53 @@
-use std::fs::File;
-use std::io::{self, BufRead, BufReader};
-use urlencoding::decode;
+use std::fs;
 
-pub fn read_link_connections(path: &str) -> io::Result<Vec<(String, String)>> {
-    let file = File::open(path)?;
-    let reader = BufReader::new(file);
+pub fn read_link_connections(path: &str) -> Vec<(String, String)> {
+    //
+    let contents = fs::read_to_string(path)
+        .expect("Cannot read the file!");
 
-    let actual_data: Vec<_> = reader
-        .lines()
-        .skip_while(|line| match line {
-            Ok(line) => line.starts_with('#'),
-            Err(_) => false,
-        })
-        .filter_map(|line| line.ok())
-        .map(|line| {
-            let mut pair = line.split('\t').map(String::from);
-            (pair.next().unwrap_or_default(), pair.next().unwrap_or_default())
-        })
-        .collect();
+    let mut pairs = Vec::new();
+    //boolean flag
+    let mut skip_documentation = true;
 
-    Ok(actual_data)
+    for line in contents.lines() {
+        if skip_documentation {
+            // Skip lines starting with "#" aka documentation
+            if !line.trim().starts_with('#') {
+                skip_documentation = false;
+            }
+            continue;
+        }
+        
+        let mut pair = line.split('\t').map(String::from);
+        if let (Some(first), Some(second)) = (pair.next(), pair.next()) {
+            pairs.push((first, second));
+        }
+    }
+
+    pairs
 }
 
+pub fn read_game_connections(path: &str) -> Vec<(usize, String, String)> {
+    let contents = fs::read_to_string(path)
+        .expect("Cannot read the file!");
 
-// pub fn read_link_connections(path: &str) -> Vec<(str,str)> {
-//     //explore if better to init vec size or let grow when more space needed
-//     let input = fs::read_to_string(path).unwrap()?;
-//     let mut connections: Vec<(str,str)> = input
-//         .lines();
-//         .skip_while(|line| line.starts_with("#"));
-//         .skip(1);
-//         .map(|line| )
-// }
+    let mut pairs = Vec::new();
+    let mut skip_documentation = true;
 
-// pub fn read_link_connections(path: &str) -> io::Result<Vec<(str,str)>> {
-//     return Ok(BufReader::new(path).lines().map(|line| {
-//         let line = line.unwrap();
-//         let mut pair = line.split("\t").map(|s| s.parse::<str>().unwrap());
-//         (pair.next().unwrap(), pair.next().unwrap())
-//     }).collect::<Vec<(str,str)>())
-// }
+    for line in contents.lines() {
+        if skip_documentation {
+            // Skip lines starting with "#"
+            if !line.trim().starts_with('#') {
+                skip_documentation = false;
+            }
+            continue;
+        }
+        
+        let mut items = line.split('\t').skip(2);
+        if let (Some(time), Some(travel_path), Some(difficulty)) = (items.next(), items.next(), items.next()) {
+            pairs.push((time.parse().unwrap(), String::from(travel_path), String::from(difficulty)));
+        }
+    }
 
-
-// //below is stack overflow solution
-// use std::io::{self, prelude::*, BufReader};
-
-// type Record = (u32, u32);
-
-// fn read(content: &[u8]) -> io::Result<Vec<Record>> {
-//     return Ok(BufReader::new(content).lines().map(|line| {
-//         let line = line.unwrap();
-//         let mut pair = line.split("\t").map(|s|s.parse::<u32>().unwrap());
-//         (pair.next().unwrap(), pair.next().unwrap())
-//     }).collect::<Vec<Record>>())
-// }
+    pairs
+}
