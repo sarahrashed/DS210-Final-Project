@@ -1,45 +1,11 @@
-type Vertex = &'static str;
-type ListOfEdges = Vec<(Vertex,Vertex)>;
-type AdjacencyLists = Vec<Vec<Vertex>>;
+use std::collections::HashMap;
 
-#[derive(Debug)]
-pub struct Graph {
-    outedges: AdjacencyLists,
-}
-
-// reverse direction of edges on a list
-pub fn reverse_edges(list:&ListOfEdges) -> ListOfEdges {
-    let mut new_list = vec![];
-    for (u,v) in list {
-        new_list.push((*v,*u));
+pub fn directed_adjacency(edges: Vec<(String, String)>) -> HashMap<String, Vec<String>> {
+    // init hashmap of linkname and vector of directed connections
+    let mut graph_list: HashMap<String, Vec<String>> = HashMap::new();
+    for (v, w) in edges {
+        // if v exists, push w to end, else add new vec
+        graph_list.entry(v).or_insert_with(Vec::new).push(w);
     }
-    new_list
-}
-
-
-impl Graph {
-    pub fn add_directed_edges(&mut self, edges:&ListOfEdges) {
-        for (u,v) in edges {
-            self.outedges[*u].push(*v);
-        }
-    }
-    // fn sort_graph_lists(&mut self) {
-    //     for l in self.outedges.iter_mut() {
-    //         l.sort();
-    //     }
-    // }
-    pub fn create_directed(n:usize,edges:&ListOfEdges) -> Graph {
-        let mut g = Graph{n,outedges:vec![vec![];n]};
-        g.add_directed_edges(edges);
-        //g.sort_graph_lists();
-        g                                        
-    }
-    
-    // fn create_undirected(n:usize,edges:&ListOfEdges)
-    //                                         -> Graph {
-    //     let mut g = Self::create_directed(n,edges);
-    //     g.add_directed_edges(&reverse_edges(edges));
-    //     g.sort_graph_lists();
-    //     g                                        
-    // }
+    graph_list
 }

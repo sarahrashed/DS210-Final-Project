@@ -11,6 +11,8 @@
     * tsv crate : https://docs.rs/tsv/latest/tsv/
     * tsv crate deserialize example : https://github.com/oooutlk/tsv/blob/master/src/de.rs#L804
     * cow : https://doc.rust-lang.org/std/borrow/enum.Cow.html
+    * hashmap insertions : https://doc.rust-lang.org/std/collections/hash_map/enum.Entry.html
+    * hashmap documentation : https://doc.rust-lang.org/std/collections/struct.HashMap.html
 
 * Rust Textbook
     * reading files: https://doc.rust-lang.org/book/ch12-02-reading-a-file.html

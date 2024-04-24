@@ -8,7 +8,6 @@ fn main() {
 
     // println!("{}",decoded);
 
-    // TODO: change to relative path
     let read_in_links = reading::read_link_connections("../../wikispeedia_paths-and-graph/links.tsv");
 
     for i in 0..3 {
@@ -24,7 +23,10 @@ fn main() {
         println!("{:?}", read_in_game[i]);
     }
 
-    let f = graph_structure::reverse_edges(&vec![("a","b"),("c","c"),("f","z"),("z","f")]);
-    println!("{:?}",f);
+    let adj_list = graph_structure::directed_adjacency(read_in_links);
 
+    //init hashmap of key = tuple pair of from->to, value = distance
+    //loop through list of searches
+    //call bfs on key pair and have bfs return distance to store in hashmap
+    
 }
