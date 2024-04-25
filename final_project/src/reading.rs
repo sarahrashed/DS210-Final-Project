@@ -1,11 +1,20 @@
 use std::fs;
 
+#[derive(Debug)]
+struct game_data {
+    seconds: usize,
+    path: String,
+    start: String,
+    end: String,
+    rating: Option<usize>,
+}
+
 pub fn read_link_connections(path: &str) -> Vec<(String, String)> {
     //
     let contents = fs::read_to_string(path)
         .expect("Cannot read the file!");
 
-    let mut pairs = Vec::new();
+    let mut game_info = Vec::new();
     //boolean flag
     let mut skip_documentation = true;
 
@@ -20,18 +29,18 @@ pub fn read_link_connections(path: &str) -> Vec<(String, String)> {
         
         let mut pair = line.split('\t').map(String::from);
         if let (Some(first), Some(second)) = (pair.next(), pair.next()) {
-            pairs.push((first, second));
+            game_info.push((first, second));
         }
     }
 
-    pairs
+    game_info
 }
 
 pub fn read_game_connections(path: &str) -> Vec<(usize, String, String)> {
     let contents = fs::read_to_string(path)
         .expect("Cannot read the file!");
 
-    let mut pairs = Vec::new();
+    let mut game_info = Vec::new();
     let mut skip_documentation = true;
 
     for line in contents.lines() {
@@ -43,11 +52,19 @@ pub fn read_game_connections(path: &str) -> Vec<(usize, String, String)> {
             continue;
         }
         
+        // skip first two features in data
         let mut items = line.split('\t').skip(2);
-        if let (Some(time), Some(travel_path), Some(difficulty)) = (items.next(), items.next(), items.next()) {
-            pairs.push((time.parse().unwrap(), String::from(travel_path), String::from(difficulty)));
+        if let (Some(seconds), Some(hbfs_path), Some(rating)) = (items.next(), items.next(), items.next()) {
+            game_info.push((seconds.parse().unwrap(), String::from(hbfs_path), String::from(rating)));
         }
     }
 
-    pairs
+    // let mut cartoon_character: Person = Person {
+    //     name: String::from("Tasmanian Devil"),
+    //     year_born: 1954,
+    //     time_100m: 7.52,
+    //     likes_ice_cream: true,
+    // };
+
+    game_info
 }
