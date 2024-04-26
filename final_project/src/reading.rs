@@ -1,14 +1,5 @@
 use std::fs;
 
-#[derive(Debug)]
-struct game_data {
-    seconds: usize,
-    path: String,
-    start: String,
-    end: String,
-    rating: Option<usize>,
-}
-
 pub fn read_link_connections(path: &str) -> Vec<(String, String)> {
     //
     let contents = fs::read_to_string(path)
@@ -36,7 +27,7 @@ pub fn read_link_connections(path: &str) -> Vec<(String, String)> {
     game_info
 }
 
-pub fn read_game_connections(path: &str) -> Vec<(usize, String, String)> {
+pub fn read_game_connections(path: &str) -> Vec<(String,String,String)> {
     let contents = fs::read_to_string(path)
         .expect("Cannot read the file!");
 
@@ -58,13 +49,6 @@ pub fn read_game_connections(path: &str) -> Vec<(usize, String, String)> {
             game_info.push((seconds.parse().unwrap(), String::from(hbfs_path), String::from(rating)));
         }
     }
-
-    // let mut cartoon_character: Person = Person {
-    //     name: String::from("Tasmanian Devil"),
-    //     year_born: 1954,
-    //     time_100m: 7.52,
-    //     likes_ice_cream: true,
-    // };
 
     game_info
 }
