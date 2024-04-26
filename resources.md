@@ -17,6 +17,7 @@
 * Rust Textbook
     * reading files: https://doc.rust-lang.org/book/ch12-02-reading-a-file.html
     * Closures : https://doc.rust-lang.org/rust-by-example/fn/closures.html
+    * if let : https://doc.rust-lang.org/rust-by-example/flow_control/if_let.html
 
 * Stack Overflow 
     * reading in tsv : https://stackoverflow.com/questions/61032399/idiomatic-way-to-parse-tsv-file-ascii
