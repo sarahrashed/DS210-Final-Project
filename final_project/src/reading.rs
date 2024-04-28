@@ -1,7 +1,10 @@
 use std::fs;
 
 pub fn read_link_connections(path: &str) -> Vec<(String, String)> {
-    //
+    /*  function reads link connections in tsv file
+        skips over documentation marked by '#'
+        holds connected pairs in a vector a Strings
+    */
     let contents = fs::read_to_string(path)
         .expect("Cannot read the file!");
 
@@ -28,6 +31,13 @@ pub fn read_link_connections(path: &str) -> Vec<(String, String)> {
 }
 
 pub fn read_game_connections(path: &str) -> Vec<(String,String,String)> {
+    /*  function reads game paths from tsv file
+        skips over documentation marked by '#'
+        holds info from game:
+        seconds = time in seconds game played for path
+        hbfs_path = human breadth first search path
+        rating = hardness grade given by player, 1-5 or "Null" if skipped
+    */
     let contents = fs::read_to_string(path)
         .expect("Cannot read the file!");
 

@@ -19,30 +19,60 @@
 //     distance[stop];
 // }
 
-use std::collections::{HashMap, VecDeque};
+use std::collections::{HashMap, VecDeque, HashSet};
 use crate::graph_structure::AdjacencyList;
 
-pub fn wiki_BFS(adj_list: &AdjacencyList, start: &str, stop: &str) -> Option<usize> {
-    let mut distance: HashMap<String, usize> = HashMap::new();
+// pub fn wiki_BFS(adj_list: &AdjacencyList, start: &str, stop: &str) -> usize {
+//     /*  function performs BFS on wiki graph from links file
+//         uses a start point and finds best path to end point
+//         returns Some(# of traverses) or None if non-existent
+//     */
+//     let mut distance: HashMap<String, usize> = HashMap::new();
+//     let mut queue = VecDeque::new();
+
+//     distance.insert(start.to_string(), 0);
+//     queue.push_back(start.to_string());
+
+//     while let Some(curr_link) = queue.pop_front() {
+//         if curr_link == stop {
+//             return distance[&curr_link];
+//         }
+
+//         if let Some(neighbors) = adj_list.get(&curr_link) {
+//             for neighbor in neighbors {
+//                 if !distance.contains_key(neighbor) {
+//                     distance.insert(neighbor.clone(), distance[&curr_link] + 1);
+//                     queue.push_back(neighbor.clone());
+//                 }
+//             }
+//         }
+//     }
+//     // if not reachable
+//     0
+// }
+
+pub fn wiki_BFS(adj_list: &AdjacencyList, start: &str, stop: &str) -> usize {
+    let mut distance: HashMap<&str, usize> = HashMap::new();
     let mut queue = VecDeque::new();
 
-    distance.insert(start.to_string(), 0);
-    queue.push_back(start.to_string());
+    distance.insert(start, 0);
+    queue.push_back(start);
 
     while let Some(curr_link) = queue.pop_front() {
         if curr_link == stop {
-            return distance.get(&curr_link).copied();
+            return *distance.get(&curr_link).unwrap();
         }
 
-        if let Some(neighbors) = adj_list.get(&curr_link) {
+        if let Some(neighbors) = adj_list.get(curr_link) {
             for neighbor in neighbors {
-                if !distance.contains_key(neighbor) {
-                    distance.insert(neighbor.clone(), distance[&curr_link] + 1);
-                    queue.push_back(neighbor.clone());
+                if !distance.contains_key(neighbor.as_str()) {
+                    distance.insert(neighbor.as_str(), distance[curr_link] + 1);
+                    queue.push_back(neighbor);
                 }
             }
         }
     }
 
-    None
+    0
 }
+
