@@ -1,6 +1,10 @@
+#![allow(warnings)]
 use urlencoding::decode;
 mod reading; 
 mod graph_structure;
+use crate::graph_structure::AdjacencyList;
+use crate::graph_structure::h_graph_info;
+mod search;
 
 #[derive(Debug)]
 struct GameData {
@@ -18,44 +22,30 @@ fn main() {
     // println!("{}",decoded);
 
     let read_in_links = reading::read_link_connections("../../wikispeedia_paths-and-graph/links.tsv");
+
     let adj_list = graph_structure::directed_adjacency(read_in_links);
+    //println!("{:?}",adj_list["14th_century"][0]);
 
     let read_in_game = reading::read_game_connections("../../wikispeedia_paths-and-graph/paths_finished.tsv");
 
-    let mut game_data: Vec<GameData> = Vec::new();
+    let data = h_graph_info(read_in_game);
+    println!("{:?}",data[0].start_link);
 
-    for data in read_in_game {   
-        let time: usize = data.0.parse().unwrap();
-        let path: String = data.1.parse().unwrap();
-        let path_parts: Vec<&str> = path.split(';').collect();
-        
-        //handle if empty path
-        let start = if let Some(part) = path_parts.get(1) {
-            part.to_string()
-        } else {
-            "".to_string()
-        };
+    // println!("{:?}",game_data[0].hbfs_path);
+    // println!("{:?}",adj_list["14th_century"]);
+    // println!("{:?}",adj_list["15th_century"]);
+    // println!("{:?}",search::wiki_BFS(&adj_list, &game_data[0].start_link, &game_data[0].end_link));
 
-        let end = if let Some(part) = path_parts.last() {
-            part.to_string()
-        } else {
-            "".to_string()
-        };
 
-        //handle if grade null or contains number 1-5
-        let grade = if data.2 == "Null" {
-            None
-        } else {
-            data.2.parse().ok()
-        };
+    // USE BELOW AS A TEST!!!!!
+    // let mut graph_list = AdjacencyList::new();
+    // graph_list.insert("A".to_string(), vec!["B".to_string(), "C".to_string()]);
+    // graph_list.insert("B".to_string(), vec!["C".to_string(), "D".to_string()]);
+    // graph_list.insert("C".to_string(), vec!["D".to_string()]);
+    // graph_list.insert("D".to_string(), vec!["A".to_string()]);
 
-        let game_datum = GameData {
-            seconds: time,
-            hbfs_path: path,
-            start_link: start,
-            end_link: end,
-            rating: grade
-        };
-        game_data.push(game_datum);
-    }
+    // let start = "A";
+    // let stop = "D"; 
+    // println!("{:?}",graph_list);
+    // println!("{:?}",search::wiki_BFS(&graph_list, &start, &stop));
 }
