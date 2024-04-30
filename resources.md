@@ -13,12 +13,17 @@
     * cow : https://doc.rust-lang.org/std/borrow/enum.Cow.html
     * hashmap insertions : https://doc.rust-lang.org/std/collections/hash_map/enum.Entry.html
     * hashmap documentation : https://doc.rust-lang.org/std/collections/struct.HashMap.html
+    * random iterator : https://docs.rs/rand/latest/rand/seq/trait.IteratorRandom.html
+    * seeding : https://rust-random.github.io/book/guide-seeding.html
+    * seedable rng : https://docs.rs/rand_core/latest/rand_core/trait.SeedableRng.html#tymethod.from_seed
 
 * Rust Textbook
     * reading files: https://doc.rust-lang.org/book/ch12-02-reading-a-file.html
     * Closures : https://doc.rust-lang.org/rust-by-example/fn/closures.html
     * if let : https://doc.rust-lang.org/rust-by-example/flow_control/if_let.html
+    * formatting print statements : https://doc.rust-lang.org/book/appendix-02-operators.html
 
 * Stack Overflow 
     * reading in tsv : https://stackoverflow.com/questions/61032399/idiomatic-way-to-parse-tsv-file-ascii
+    * use of random iterator : https://stackoverflow.com/questions/57829511/how-to-create-a-random-sample-from-a-vector-of-elements
     
