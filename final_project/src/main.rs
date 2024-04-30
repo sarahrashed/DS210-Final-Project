@@ -8,6 +8,7 @@ mod search;
 use rand::seq::IteratorRandom;
 use rand::{SeedableRng, thread_rng};
 use rand::rngs::StdRng;
+use std::time::Instant;
 
 fn main() {
     // get link connections
@@ -30,14 +31,22 @@ fn main() {
 
     // calculate true bfs path for game start and end vectors
     // start and ends come from sample of 10_000
-    let mut bfs_player_path: Vec<usize> = vec![0;sample.len()];
+    let mut bfs_player_path: Vec<usize> = vec![0;sample_size];
+    let mut bfs_seconds: Vec<f64> = vec![0.0;sample_size];
     for game_index in 0..sample.len() {
+        let start_time = Instant::now();
+
         let length = search::wiki_BFS(
             &adj_list, 
             &sample[game_index].start_link, 
             &sample[game_index].end_link
         );
-        bfs_player_path[game_index] = length;
+
+        // store search time
+        let end_time = start_time.elapsed().as_secs_f64();
+        bfs_seconds[game_index] = end_time;
+
+        bfs_player_path[game_index] = length; 
     }
 
     // difference between best path and human path
@@ -48,6 +57,8 @@ fn main() {
     let mut sum_hbfs: usize = 0;
     let mut sum_error: usize = 0;
     let mut max_index: usize = 0;
+    let mut sum_bfs_seconds: f64 = 0.0;
+    let mut sum_hbfs_seconds: usize = 0;
 
     for i in 0..sample_size {
         error[i] = sample[i].path_len - bfs_player_path[i];
@@ -55,12 +66,16 @@ fn main() {
         sum_hbfs += sample[i].path_len;
         sum_error += error[i];
         if error[i] > max_index {max_index = i}
+        sum_bfs_seconds += bfs_seconds[i];
+        sum_hbfs_seconds += sample[i].seconds;
     }
 
     //metrics: avg distance real bfs, avg distance hbfs, MAE
     let avg_bfs = sum_bfs as f64 / sample_size as f64;
     let avg_hbfs = sum_hbfs as f64 / sample_size as f64;
-    let bfs_MAE = sum_error as f64 / sample_size as f64;    
+    let bfs_MAE = sum_error as f64 / sample_size as f64;  
+    let avg_bfs_seconds = sum_bfs_seconds as f64 / sample_size as f64;
+    let avg_hbfs_seconds = sum_hbfs_seconds as f64 / sample_size as f64;
 
     println!("{}FIRST 10 PATHS IN 10,000 SAMPLE{}", "-".repeat(31), "-".repeat(31));
     println!(
@@ -70,7 +85,7 @@ fn main() {
         " ".repeat(9)
     );
 
-    for i in 0..10{
+    for i in 0..10 {
         let start = decode(&sample[i].start_link).unwrap();
         let end = decode(&sample[i].end_link).unwrap();
         let dot1 = ".".repeat(45 - start.len());
@@ -81,6 +96,8 @@ fn main() {
     println!("Average Traverse Length: {}",avg_bfs);
     println!("Average Human Traverse Length: {}",avg_hbfs);
     println!("MAE of BFS versus HBFS Paths: {}",bfs_MAE);
+    println!("Average Seconds Computed BFS: {:.5}", avg_bfs_seconds);
+    println!("Average Seconds Wikispeedia Traverse Played: {}",avg_hbfs_seconds);
     println!("BFS Path with Largest Error: {} --> {} (error = {})",sample[max_index].start_link, sample[max_index].end_link, error[max_index]);
 }
 

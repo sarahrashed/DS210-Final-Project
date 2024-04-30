@@ -16,6 +16,7 @@
     * random iterator : https://docs.rs/rand/latest/rand/seq/trait.IteratorRandom.html
     * seeding : https://rust-random.github.io/book/guide-seeding.html
     * seedable rng : https://docs.rs/rand_core/latest/rand_core/trait.SeedableRng.html#tymethod.from_seed
+    * std::time : https://doc.rust-lang.org/std/time/struct.Instant.html
 
 * Rust Textbook
     * reading files: https://doc.rust-lang.org/book/ch12-02-reading-a-file.html
