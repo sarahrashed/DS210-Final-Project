@@ -21,7 +21,6 @@ fn main() {
 
     // build vector of GameData struct for easy access
     let data = h_graph_info(read_in_game);
-    //println!("{:?}",data.len());
 
     //take random sample from data
     let seed: [u8; 32] = [1; 32]; 
@@ -63,7 +62,7 @@ fn main() {
     let avg_hbfs = sum_hbfs as f64 / sample_size as f64;
     let bfs_MAE = sum_error as f64 / sample_size as f64;    
 
-    println!("-------------------------------FIRST 10 PATHS IN 10,000 SAMPLE-------------------------------");
+    println!("{}FIRST 10 PATHS IN 10,000 SAMPLE{}", "-".repeat(31), "-".repeat(31));
     println!(
         "Start Vertex{}End Vertex{}BFS Error{}",
         " ".repeat(34),
@@ -91,7 +90,6 @@ mod tests {
 
     #[test]
     fn bfs_functionality() {
-    // testing bfs functionality
     let mut graph_list = AdjacencyList::new();
     graph_list.insert("A".to_string(), vec!["B".to_string(), "C".to_string()]);
     graph_list.insert("B".to_string(), vec!["C".to_string(), "D".to_string()]);
@@ -113,6 +111,19 @@ mod tests {
 
     #[test]
     fn test_game_graph() {
+        let read_in_links = reading::read_link_connections("../wikispeedia_paths-and-graph/links.tsv");
+
+        let adj_list = graph_structure::directed_adjacency(read_in_links);
+
+        let read_in_game = reading::read_game_connections("../wikispeedia_paths-and-graph/paths_finished.tsv");
+
+        let data = h_graph_info(read_in_game);
+
+        let test_bfs = search::wiki_BFS(&adj_list,&data[0].start_link,&data[0].end_link);
+
+        assert_eq!(adj_list["14th_century"], ["13th_century", "15th_century", "Abacus", "Aztec", "Black_Death", "Buddha", "China", "Christianity", "Dante_Alighieri", "Dark_Ages", "Edward_III_of_England", "England", "English_peasants%27_revolt_of_1381", "Europe", "France", "Hundred_Years%27_War", "Ibn_Battuta", "India", "Islam", "Italy", "Lithuania", "Ming_Dynasty", "Niger", "Ottoman_Empire", "Poland", "Pope", "Renaissance", "Singapore", "Time", "Timur", "Washington%2C_D.C."]);
+        assert_eq!(adj_list["Pyramid"][16],"Volleyball");
+        assert_eq!(test_bfs, 3);
 
     }
 }
